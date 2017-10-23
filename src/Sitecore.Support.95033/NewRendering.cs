@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Sitecore.Data.Items;
+using Sitecore.Diagnostics;
 using Sitecore.SecurityModel;
 using Sitecore.Shell.Applications.WebEdit.Commands;
 using Sitecore.Shell.Framework.Commands;
@@ -40,7 +42,24 @@ namespace Sitecore.Support
             {
                 return CommandState.Disabled;
             }
+            // Sets the context item to the variable
+            Assert.ArgumentNotNull(context, "context");
+            Item item = context.Items[0];
+            // Check whether user has permission to Write and Language Write
+            if (HasWriteAccess(item))
+            {
+                if (!item.Access.CanWriteLanguage())
+                {
+                    return CommandState.Disabled;
+                }
+            }
             return base.QueryState(context);
+        }
+        // Check whether user has permission to Write 
+        protected static bool HasWriteAccess(Item item)
+        {
+            Assert.ArgumentNotNull(item, "item");
+            return item.Access.CanWrite();
         }
     }
 
