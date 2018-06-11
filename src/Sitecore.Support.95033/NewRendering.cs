@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Sitecore.Data.Items;
 using Sitecore.Diagnostics;
+using Sitecore.ExperienceEditor.Utils;
 using Sitecore.SecurityModel;
 using Sitecore.Shell.Applications.WebEdit.Commands;
 using Sitecore.Shell.Framework.Commands;
@@ -48,7 +49,7 @@ namespace Sitecore.Support
             // Check whether user has permission to Write and Language Write
             if (HasWriteAccess(item))
             {
-                if (!item.Access.CanWriteLanguage())
+                if (!WebUtility.IsEditAllVersionsTicked()&& !item.Access.CanWriteLanguage())
                 {
                     return CommandState.Disabled;
                 }
